@@ -1,0 +1,7 @@
+.gitignore
+.git
+src
+test
+.release.json
+.babelrc
+.eslintrc
