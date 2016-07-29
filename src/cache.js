@@ -46,4 +46,12 @@ export default class Cache {
   get(key) {
     return this.db.get(stringifyKey(key));
   }
+
+  close() {
+    return this.db.close();
+  }
+
+  on(event, callback) {
+    this.db.on(event, callback);
+  }
 }
