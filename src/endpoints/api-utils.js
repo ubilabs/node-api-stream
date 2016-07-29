@@ -1,4 +1,4 @@
-import ThrottledStream from '../../../node-throttled-stream/dist/throttled-stream'; // eslint-disable-line max-len
+import ThrottledTransform from '../../../node-throttled-stream/dist/throttled-transform'; // eslint-disable-line max-len
 import Cache from '../cache';
 
 const defaults = {
@@ -11,7 +11,7 @@ const defaults = {
 
 export default {
   createApi(initialiseEndpoint) {
-    return class API extends ThrottledStream {
+    return class API extends ThrottledTransform {
       constructor(options) {
         options = Object.assign({}, defaults, options);
 
@@ -45,10 +45,11 @@ export default {
       }
 
       _throttledTransform(data, encoding, done) {
-        const query = this.accessor(data);
+        const query = this.accessor(data),
+          metaData = this.getMetaData(data, query);
+
         this.endpoint.query(query, (error, response) => {
-          const metaData = this.getMetaData(data, query),
-            result = Object.assign({error}, metaData, {response});
+          const result = Object.assign({error}, metaData, {response});
 
           if (this.cache) {
             this.cache.add(query, Object.assign({}, result, {cached: true}));
