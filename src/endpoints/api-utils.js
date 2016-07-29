@@ -46,14 +46,16 @@ export default {
 
       _throttledTransform(data, encoding, done) {
         const query = this.accessor(data),
-          metaData = this.getMetaData(data, query);
+          result = this.getMetaData(data, query);
 
         this.endpoint.query(query, (error, response) => {
-          const result = Object.assign({error}, metaData, {response});
+          result.response = response ? response : result.response;
 
-          if (this.cache) {
+          if (this.cache && !error) {
             this.cache.add(query, Object.assign({}, result, {cached: true}));
           }
+
+          result.error = error ? error : result.error;
 
           done(null, Object.assign(this.getStats(), result));
         });
