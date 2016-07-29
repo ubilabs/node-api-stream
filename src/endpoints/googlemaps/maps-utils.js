@@ -28,19 +28,21 @@ export default {
  * @param {Object} options The options object to be validated
  **/
 function validateOptions(options) {
-  if ((options.clientId || options.privateKey) && options.key) {
+  if ((options.google_client_id || options.google_private_key) && options.key) {
     throw new Error('Can only specify credentials or API key');
   }
 
-  if (options.clientId && !options.privateKey) {
-    throw new Error('Missing privateKey');
+  if (options.google_client_id && !options.google_private_key) {
+    throw new Error('Missing google_private_key');
   }
 
-  if (!options.clientId && options.privateKey) {
-    throw new Error('Missing clientId');
+  if (!options.google_client_id && options.google_private_key) {
+    throw new Error('Missing google_client_id');
   }
 
-  if (!options.key && !(options.clientId && options.privateKey)) {
+  if (!options.key &&
+    !(options.google_client_id && options.google_private_key)
+  ) {
     throw new Error('Must either provide credentials or API key');
   }
 }
