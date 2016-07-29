@@ -1,6 +1,6 @@
 import mapsUtils from './maps-utils';
 
-const staticMap = {
+const staticMaps = {
   URL: mapsUtils.createApi(mapsApi => ({
     query: (query, done) => {
       const response = mapsApi.staticMap(query);
@@ -14,4 +14,4 @@ const staticMap = {
   }))
 };
 
-export {staticMap};
+export {staticMaps};
