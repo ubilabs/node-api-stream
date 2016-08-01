@@ -1,7 +1,7 @@
 {
-  "name": "@caerostris/geoapi-stream",
+  "name": "api-stream",
   "version": "0.0.1",
-  "description": "A collection of streaming Geo APIs",
+  "description": "Easily create streaming, rate-limited APIs",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel ./src --out-dir ./dist",
@@ -13,14 +13,14 @@
     "release": "release-it"
   },
   "keywords": [
-    "google",
-    "maps",
     "api",
-    "geocoding",
     "stream",
     "query",
     "limit",
-    "static maps"
+    "rate",
+    "rate limit",
+    "query limit",
+    "streaming"
   ],
   "author": "Keno Schwalb <schwalb@ubilabs.net>",
   "license": "MIT",
@@ -37,7 +37,6 @@
     "sinon": "^1.17.5"
   },
   "dependencies": {
-    "flat-file-db": "^1.0.0",
-    "googlemaps": "^1.6.0"
+    "flat-file-db": "^1.0.0"
   }
 }
