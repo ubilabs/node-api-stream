@@ -45,7 +45,7 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
     constructor(options) {
       options = Object.assign({}, defaultOptions, options);
 
-      super(options.queriesPerSecond, {objectMode: true});
+      super({queriesPerSecond: options.queriesPerSecond, objectMode: true});
 
       if (options.cacheFile) {
         this.cache = new Cache(options.cacheFile);
