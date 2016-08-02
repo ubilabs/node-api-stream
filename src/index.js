@@ -1,13 +1,18 @@
+/* eslint-disable no-underscore-dangle */
 import ThrottledTransform from '../../node-throttled-transform-stream/dist/throttled-transform'; // eslint-disable-line max-len
 import Cache from './cache';
 
-const defaults = {
-  queriesPerSecond: 35,
-  accessor: data => data,
-  stats: {
-    current: 0
-  }
-};
+const _queryEndpoint = new WeakMap(),
+  _cache = new WeakMap(),
+  _accessor = new WeakMap(),
+  _stats = new WeakMap(),
+  defaults = {
+    queriesPerSecond: 35,
+    accessor: data => data,
+    stats: {
+      current: 0
+    }
+  };
 
 /**
  * A helper function for easily creating rate-limited, streaming APIs.
@@ -47,22 +52,21 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
 
       super({queriesPerSecond: options.queriesPerSecond, objectMode: true});
 
-      if (options.cacheFile) {
-        this.cache = new Cache(options.cacheFile);
-      }
-
-      this.queryEndpoint = initialiseEndpoint(options);
-      this.accessor = options.accessor;
-      this.stats = options.stats;
+      _queryEndpoint.set(this, initialiseEndpoint(options));
+      _accessor.set(this, options.accessor);
+      _stats.set(this, options.stats);
+      _cache.set(this,
+        options.cacheFile ? new Cache(options.cacheFile) : null);
     }
 
     _skipThrottle(input) {
-      if (!this.cache) {
+      const cache = _cache.get(this);
+      if (!cache) {
         return false;
       }
 
-      const query = this.accessor(input),
-        cachedResponse = this.cache.get(query);
+      const query = _accessor.get(this)(input),
+        cachedResponse = cache.get(query);
 
       if (cachedResponse) {
         return {
@@ -79,14 +83,15 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
     }
 
     _throttledTransform(input, encoding, done) {
-      const query = this.accessor(input),
+      const cache = _cache.get(this),
+        query = _accessor.get(this)(input),
         stats = this.getStats(),
         metaData = {input, query, stats};
 
-      this.queryEndpoint(query, (error, response) => {
+      _queryEndpoint.get(this)(query, (error, response) => {
         // add result to cache if cache is set and no error occurred
-        if (this.cache && !error && response) {
-          this.cache.add(query, response);
+        if (cache && !error && response) {
+          cache.add(query, response);
         }
 
         const result = {
@@ -101,9 +106,10 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
     }
 
     getStats() {
-      this.stats.current++;
-      // create copy of this.stats to keep end user from overwriting stats
-      return Object.assign({}, this.stats);
+      const stats = _stats.get(this);
+      stats.current++;
+      // create copy of stats to keep end user from overwriting stats
+      return Object.assign({}, stats);
     }
   };
 }
