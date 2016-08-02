@@ -38,5 +38,8 @@
   },
   "dependencies": {
     "flat-file-db": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=4"
   }
 }
