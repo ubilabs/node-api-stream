@@ -50,21 +50,26 @@ wikiStream.write('NodeJS');
 wikiStream.end();
 ```
 
-## API Documentation
+## API-Stream Documentation
 
 **apiStream.createApi(initialiseEndpoint, endpointDefaultOptions = {})**
 
-* initialiseEndpoint &lt;Function&gt; Endpoint initialisation function
-* endpointDefaultOptions &lt;Object&gt; Default options for the constructor of the created class
+* initialiseEndpoint `<Function>` Endpoint initialisation function
+* endpointDefaultOptions `<Object>` Default options for the constructor of the created class
 
-The endpoint initialisation function must 
+The endpoint initialisation function must take an `options` object as parameter. The options can be user-defined upon initialisation of the generated API class. The endpoint initialisation function should return an *endpoint function*. The endpoint function is called for every item written to the generated API stream. It is passed two parameters:
 
-The constructor of created stream classes accepts an options object.  
+* **query:** Type: `?`. The query written to the stream, after it has been passed through the `accessor` function.
+* **done:** Type: `Function`. A callback function which must be called once, after the API query is completed. Pass an error as first parameter to indiciate failure, or `null` to indicate success. Pass the API response as second parameter.
+
+## Generated Class Documentation
+
+The constructor of created stream class accepts an options object.  
 The options object is used to define some behaviour (e.g. qps, caching), and is then passed on as parameter to `initialiseEndpoint`.  
 All default values may be overriden by re-defining the value in `endpointDefaultOptions`.  
 By default, the created stream classes support the following options:
 
-* **options.qps** Type: `Number`, default: `35`. Defines the maximum number of requests per second. Must be at least `1`.
-* **options.cacheFile** Type: `String`, default: `null`. Defines the name of the cache file to be used. The cache is disable if no name has been defined.
-* **options.accessor** Type: `Function`, default: `data => data`. Items written to the stream will be passed through `options.accessor` before being passed as query to `queryEndpoint`.
-* **options.stats** Type: `Object`, default: `{current: 0}`. A statistics object which will be attached to each result. The `options.stats.current` property is increment on each query.
+* **options.qps:** Type: `Number`, default: `35`. Defines the maximum number of requests per second. Must be at least `1`.
+* **options.cacheFile:** Type: `String`, default: `null`. Defines the name of the cache file to be used. The cache is disable if no name has been defined.
+* **options.accessor:** Type: `Function`, default: `data => data`. Items written to the stream will be passed through `options.accessor` before being passed as query to `queryEndpoint`.
+* **options.stats:** Type: `Object`, default: `{current: 0}`. A statistics object which will be attached to each result. The `options.stats.current` property is increment on each query.
