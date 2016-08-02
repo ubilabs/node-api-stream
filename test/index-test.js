@@ -1,25 +1,25 @@
 /* eslint-disable no-unused-expressions, max-nested-callbacks */
 import {expect} from 'chai';
 import stream from 'stream';
-import apiUtils from '../src/index';
+import {createApi} from '../src/index';
 import helpers from './lib/helpers';
 
 describe('api-utils', () => {
   it('should export a `createApi` function', () => {
-    expect(apiUtils.createApi).to.be.a('function');
+    expect(createApi).to.be.a('function');
   });
 
   describe('createApi', () => {
     it('should return a class given an endpoint', () => {
       const endpoint = helpers.getMockEndpoint();
 
-      expect(apiUtils.createApi(endpoint)).to.be.a('function');
+      expect(createApi(endpoint)).to.be.a('function');
     });
 
     describe('the created class', () => {
       it('should return a class which is a transform stream', () => {
         const endpoint = helpers.getMockEndpoint(),
-          API = apiUtils.createApi(endpoint);
+          API = createApi(endpoint);
 
         expect(API.prototype)
           .to.be.instanceof(stream.Transform);
@@ -28,7 +28,7 @@ describe('api-utils', () => {
       it('should push an object with the API response', done => {
         const result = 'some result',
           endpoint = helpers.getMockEndpoint(result),
-          API = apiUtils.createApi(endpoint),
+          API = createApi(endpoint),
           apiInstance = new API();
 
         apiInstance.on('data', data => {
@@ -43,7 +43,7 @@ describe('api-utils', () => {
       it('should push an object with the query', done => {
         const input = 'some input',
           endpoint = helpers.getMockEndpoint('some result'),
-          API = apiUtils.createApi(endpoint),
+          API = createApi(endpoint),
           apiInstance = new API();
 
         apiInstance.on('data', data => {
@@ -58,7 +58,7 @@ describe('api-utils', () => {
       it('should push an object with the input', done => {
         const input = 'some input',
           endpoint = helpers.getMockEndpoint('some result'),
-          API = apiUtils.createApi(endpoint),
+          API = createApi(endpoint),
           apiInstance = new API();
 
         apiInstance.on('data', data => {
@@ -72,7 +72,7 @@ describe('api-utils', () => {
 
       it('should push an object with a `cached` field', done => {
         const endpoint = helpers.getMockEndpoint('some result'),
-          API = apiUtils.createApi(endpoint),
+          API = createApi(endpoint),
           apiInstance = new API();
 
         apiInstance.on('data', data => {
@@ -86,7 +86,7 @@ describe('api-utils', () => {
 
       it('should push an object with a `stats` field', done => {
         const endpoint = helpers.getMockEndpoint('some result'),
-          API = apiUtils.createApi(endpoint),
+          API = createApi(endpoint),
           apiInstance = new API();
 
         apiInstance.on('data', data => {
@@ -100,7 +100,7 @@ describe('api-utils', () => {
 
       it('should push an object with a `stats.current` field', done => {
         const endpoint = helpers.getMockEndpoint('some result'),
-          API = apiUtils.createApi(endpoint),
+          API = createApi(endpoint),
           apiInstance = new API();
 
         apiInstance.on('data', data => {
@@ -114,7 +114,7 @@ describe('api-utils', () => {
 
       it('should push an object with an `error: false` field', done => {
         const endpoint = helpers.getMockEndpoint('some result'),
-          API = apiUtils.createApi(endpoint),
+          API = createApi(endpoint),
           apiInstance = new API();
 
         apiInstance.on('data', data => {
@@ -129,7 +129,7 @@ describe('api-utils', () => {
       it('should set the `error` field on error', done => {
         const error = 'some error',
           endpoint = helpers.getMockEndpoint(null, error),
-          API = apiUtils.createApi(endpoint),
+          API = createApi(endpoint),
           apiInstance = new API();
 
         apiInstance.on('data', data => {
