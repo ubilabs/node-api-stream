@@ -52,7 +52,7 @@ export default {
           this.cache = new Cache(options.cacheFile);
         }
 
-        this.endpoint = initialiseEndpoint(options);
+        this.queryEndpoint = initialiseEndpoint(options);
         this.accessor = options.accessor;
         this.stats = options.stats;
       }
@@ -84,7 +84,7 @@ export default {
           stats = this.getStats(),
           metaData = {input, query, stats};
 
-        this.endpoint.query(query, (error, response) => {
+        this.queryEndpoint(query, (error, response) => {
           // add result to cache if cache is set and no error occurred
           if (this.cache && !error && response) {
             this.cache.add(query, response);
