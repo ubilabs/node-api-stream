@@ -1,5 +1,5 @@
 var https = require('https'),
-  apiStream = require('./dist/index'),
+  apiStream = require('../dist/index'),
   apiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=';
 
 module.exports = apiStream.createApi(options => (query, done) => {
