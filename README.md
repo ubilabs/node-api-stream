@@ -8,7 +8,7 @@ npm install api-stream --save
 
 ## Usage
 
-Creating a streaming, rate-limited, caching API:
+Creating a streaming, rate-limited, caching Wikipedia search API:
 
 ```js
 var https = require('https'),
