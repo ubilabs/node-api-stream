@@ -46,7 +46,17 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
   // allow endpoints to set their own default options
   const defaultOptions = Object.assign({}, defaults, endpointDefaultOptions);
 
+  /**
+   * A transform stream which can optionally cache results, transform input
+   * data using a user-supplied accessor function before passing the query to
+   * the API endpoint, and append meta data to the API results before they are
+   * emitted.
+   **/
   return class API extends ThrottledTransform {
+    /**
+     * Create an API.
+     * @param {Object} apiOptions Options for the API interface.
+     **/
     constructor(apiOptions) {
       const options = Object.assign({}, defaultOptions, apiOptions);
 
@@ -59,6 +69,11 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
         options.cacheFile ? new Cache(options.cacheFile) : null);
     }
 
+    /**
+     * ThrottledStream's _skipThrottle function
+     * @param {?} input Query passed in by user
+     * @returns {?} API response if result was cached, false otherwise
+     **/
     _skipThrottle(input) {
       const cache = _cache.get(this);
       if (!cache) {
@@ -82,6 +97,12 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
       return cachedResponse || false;
     }
 
+    /**
+     * ThrottledStream's _transform method
+     * @param {?} input User query
+     * @param {string} encoding input encoding, if input is a string
+     * @param {Function} done Callback function
+     **/
     _throttledTransform(input, encoding, done) {
       const cache = _cache.get(this),
         query = _accessor.get(this)(input),
@@ -105,6 +126,12 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
       });
     }
 
+    /**
+     * Function to retrieve stats object for a query.
+     * This function increases the `current` count and
+     * creates a copy of the stats object.
+     * @returns {Object} stats object
+     **/
     getStats() {
       const stats = _stats.get(this);
       stats.current++;
