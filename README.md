@@ -1,4 +1,4 @@
-# api-stream 
+# api-stream
 
 Create streaming, rate-limited APIs with ease
 
@@ -15,7 +15,7 @@ var https = require('https'),
   apiStream = require('api-stream'),
   apiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=';
 
-module.exports = apiStream.createApi(options => (query, done) => {
+module.exports = apiStream.createApi(constructorOptions => (query, done) => {
   https.get(apiURL + encodeURIComponent(query), res => {
     var response = '';
 
