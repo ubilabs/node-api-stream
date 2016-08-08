@@ -26,15 +26,11 @@ export default class Cache {
    * Add new entries to the cache
    * @param {string}   key  The key that shall be cached
    * @param {Object}   value The value that should be stored in the cache
-   * @param {Function} callback The callback
+   * @param {Function} callback Callback function of form callback(err, result);
    */
   add(key, value, callback = () => {}) {
     this.db.put(stringifyKey(key), value, error => {
-      if (error) {
-        throw error;
-      }
-
-      callback();
+      callback(error || null, value);
     });
   }
 
@@ -47,10 +43,18 @@ export default class Cache {
     return this.db.get(stringifyKey(key));
   }
 
+  /*
+   * Close stream to the cache file
+   */
   close() {
     return this.db.close();
   }
 
+  /*
+   * Register a database event
+   * @param {string} event The name of the event to register (e.g. 'close')
+   * @param {Function} callback Callback function
+   */
   on(event, callback) {
     this.db.on(event, callback);
   }
