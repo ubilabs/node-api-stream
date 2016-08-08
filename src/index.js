@@ -47,8 +47,8 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
   const defaultOptions = Object.assign({}, defaults, endpointDefaultOptions);
 
   return class API extends ThrottledTransform {
-    constructor(options) {
-      options = Object.assign({}, defaultOptions, options);
+    constructor(apiOptions) {
+      const options = Object.assign({}, defaultOptions, apiOptions);
 
       super({queriesPerSecond: options.queriesPerSecond, objectMode: true});
 
@@ -95,8 +95,8 @@ export function createApi(initialiseEndpoint, endpointDefaultOptions = {}) {
         }
 
         const result = {
-          response: response ? response : {},
-          error: error ? error : false,
+          response: response || {},
+          error: error || false,
           cached: false
         };
 
