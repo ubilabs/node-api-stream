@@ -22,22 +22,20 @@ describe('The cache', () => {
     expect(cache).to.exist;
   });
 
-  it('should create a new cache file depending on the name', done => {
+  it('should create a new cache file depending on the name', () => {
     const cache = new Cache(cacheName); // eslint-disable-line no-unused-vars
 
-    fs.exists(cacheName, exists => {
-      expect(exists).be.true;
-      fs.unlinkSync(cacheName);
-      done();
-    });
+    expect(fs.existsSync(cacheName)).to.be.true;
   });
 
   it('should be possible to add and retrieve new entries', done => {
-    const cache = new Cache(cacheName);
+    const cache = new Cache(cacheName),
+      testLocation = {lat: 50, lng: 10},
+      testLocationName = 'MyLocation';
 
-    cache.add('MyLocation', {lat: 50, lng: 10}, () => {
-      expect(cache.get('MyLocation')).to.exist;
-      expect(cache.get('MyLocation')).to.deep.equal({lat: 50, lng: 10});
+    cache.add(testLocationName, testLocation, () => {
+      expect(cache.get(testLocationName)).to.exist;
+      expect(cache.get(testLocationName)).to.deep.equal(testLocation);
       done();
     });
   });
@@ -49,17 +47,19 @@ describe('The cache', () => {
   });
 
   it('should persist entries', done => {
-    const cache = new Cache(cacheName);
+    const cache = new Cache(cacheName),
+      testLocation = {lat: 50, lng: 10},
+      testLocationName = 'MyLocation';
 
-    cache.add('MyLocation', {lat: 50, lng: 10}, () => {
+    cache.add(testLocationName, testLocation, () => {
       cache.close();
     });
 
     cache.on('close', () => {
       const newCache = new Cache(cacheName);
 
-      expect(newCache.get('MyLocation')).to.exist;
-      expect(newCache.get('MyLocation')).to.deep.equal({lat: 50, lng: 10});
+      expect(newCache.get(testLocationName)).to.exist;
+      expect(newCache.get(testLocationName)).to.deep.equal(testLocation);
       done();
     });
   });
