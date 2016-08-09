@@ -1,4 +1,4 @@
-# api-stream
+# api-stream [![Build Status](https://travis-ci.org/ubilabs/node-api-stream.svg?branch=master)](https://travis-ci.org/ubilabs/node-api-stream)
 
 Create streaming, rate-limited APIs with ease
 
