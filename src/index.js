@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import ThrottledTransform from '../../node-throttled-transform-stream/dist/throttled-transform'; // eslint-disable-line max-len
+import ThrottledTransform from 'throttled-transform-stream';
 import Cache from './cache';
 
 const _queryEndpoint = new WeakMap(),
