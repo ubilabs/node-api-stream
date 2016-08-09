@@ -1,6 +1,6 @@
 {
   "name": "api-stream",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Easily create streaming, rate-limited APIs",
   "main": "dist/index.js",
   "scripts": {
